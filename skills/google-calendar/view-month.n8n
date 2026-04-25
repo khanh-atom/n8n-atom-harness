@@ -1,0 +1,82 @@
+{
+  "name": "Google Calendar — View Month",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Subflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [0, 0],
+      "id": "trigger"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:6277/execute-tool",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Origin", "value": "http://localhost:6274" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ toolName: 'new_page', toolArgs: { url: 'https://calendar.google.com/calendar/r/month', background: false, hidden: false }, server: { command: 'npx', args: ['mcp-remote', 'http://127.0.0.1:9001/mcp'] } }) }}",
+        "options": { "timeout": 30000 }
+      },
+      "name": "Open Calendar",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [200, 0],
+      "id": "open-calendar"
+    },
+    {
+      "parameters": {
+        "operation": "wait",
+        "amount": 3,
+        "unit": "seconds"
+      },
+      "name": "Wait for Load",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [400, 0],
+      "id": "wait"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:6277/execute-tool",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Origin", "value": "http://localhost:6274" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ toolName: 'get_page_content', toolArgs: { page: $json.result.pageId }, server: { command: 'npx', args: ['mcp-remote', 'http://127.0.0.1:9001/mcp'] } }) }}",
+        "options": { "timeout": 30000 }
+      },
+      "name": "Get Events",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [600, 0],
+      "id": "get-events"
+    }
+  ],
+  "connections": {
+    "Subflow Trigger": {
+      "main": [[{ "node": "Open Calendar", "type": "main", "index": 0 }]]
+    },
+    "Open Calendar": {
+      "main": [[{ "node": "Wait for Load", "type": "main", "index": 0 }]]
+    },
+    "Wait for Load": {
+      "main": [[{ "node": "Get Events", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": { "executionOrder": "v1" },
+  "pinData": {}
+}

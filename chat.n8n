@@ -1,0 +1,120 @@
+{
+  "name": "chat",
+  "nodes": [
+    {
+      "parameters": {
+        "public": false,
+        "availableInChat": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -32,
+        32
+      ],
+      "id": "b4c00fb6-5bb8-4972-9ac1-113b268aafe2",
+      "name": "When chat message received",
+      "webhookId": "7e5750f5-c102-49a4-8ef7-d3151cdcf048"
+    },
+    {
+      "parameters": {
+        "aiAgentStarterCallout": "",
+        "promptType": "auto",
+        "text": "={{ $json.chatInput }}",
+        "hasOutputParser": false,
+        "needsFallback": false,
+        "options": {
+          "systemMessage": "You are a helpful assistant, alway follow SKILL.md per user request"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        -64
+      ],
+      "id": "45b61bbb-8d55-419d-8024-3288697d3847",
+      "name": "AI Agent",
+      "issues": {}
+    },
+    {
+      "parameters": {
+        "notice": "",
+        "model": "auto",
+        "options": {
+          "workingDirectory": "={{ $json.__dirpath }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatCursorAgent",
+      "typeVersion": 1,
+      "position": [
+        144,
+        144
+      ],
+      "id": "30943f1c-17b9-4e15-9054-4d69c3842545",
+      "name": "Cursor Agent CLI Chat Model",
+      "issues": {}
+    },
+    {
+      "parameters": {
+        "events": "worklfow_call",
+        "inputSource": "workflowInputs",
+        "workflowInputs": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -32,
+        -128
+      ],
+      "id": "420ca0ba-2b2a-4562-9f79-b2cb7c9870d7",
+      "name": "When Executed by Another Workflow",
+      "issues": {
+        "parameters": {
+          "workflowInputs": [
+            "At least 1 field is required."
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cursor Agent CLI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "availableInMCP": false
+  }
+}

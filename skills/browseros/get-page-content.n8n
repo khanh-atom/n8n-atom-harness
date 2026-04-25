@@ -1,0 +1,106 @@
+{
+  "name": "BrowserOS Get Page Content",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "c5000000-0001-4000-8000-000000000001",
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [260, 300]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "// Extract parameters\nconst input = $input.first().json;\nconst body = input.body || input;\n\nconst page = body.page;\nif (page === undefined || page === null) {\n  return [{ json: { error: 'Missing required parameter: page' } }];\n}\n\nconst toolArgs = { page };\nif (body.selector) toolArgs.selector = body.selector;\nif (body.includeLinks !== undefined) toolArgs.includeLinks = body.includeLinks;\nif (body.includeImages !== undefined) toolArgs.includeImages = body.includeImages;\nif (body.viewportOnly !== undefined) toolArgs.viewportOnly = body.viewportOnly;\n\nreturn [{\n  json: {\n    toolName: 'get_page_content',\n    toolArgs,\n    server: {\n      command: 'npx',\n      args: ['mcp-remote', 'http://127.0.0.1:9001/mcp']\n    }\n  }\n}];"
+      },
+      "id": "c5000000-0002-4000-8000-000000000002",
+      "name": "Build MCP Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:6277/execute-tool",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Origin",
+              "value": "http://localhost:6274"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "c5000000-0003-4000-8000-000000000003",
+      "name": "Execute MCP Tool",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [700, 300]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "const result = $input.first().json;\nreturn [{ json: { success: true, tool: 'get_page_content', result } }];"
+      },
+      "id": "c5000000-0004-4000-8000-000000000004",
+      "name": "Format Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [920, 300]
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Build MCP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build MCP Request": {
+      "main": [
+        [
+          {
+            "node": "Execute MCP Tool",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute MCP Tool": {
+      "main": [
+        [
+          {
+            "node": "Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

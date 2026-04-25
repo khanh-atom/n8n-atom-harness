@@ -1,0 +1,36 @@
+{
+  "readme": "To open this file inside VSCode, you need to install VSCode extension \"Kanban atom8n\"",
+  "columns": [
+    {
+      "id": "col_hly0e1_moep64au",
+      "title": "To Do",
+      "order": 0,
+      "boardId": "",
+      "tasks": [
+        {
+          "id": "task_8j0llj_moep65be",
+          "title": "update skill strcuture and SKILL.md",
+          "description": "actual: skills/\\*.n8n\n\nexpected: \\\nskills/{site-name}/\\*.md\n\nskills/{site-name}/\\*.n8n\n\nso the folder skill will include both md and n8n file,\n\nDo not use webhook node, use subflow node",
+          "priority": "MEDIUM",
+          "order": 0,
+          "columnId": "col_hly0e1_moep64au",
+          "assigneeId": null
+        }
+      ]
+    },
+    {
+      "id": "col_wpeyd9_moep64au",
+      "title": "In Progress",
+      "order": 1,
+      "boardId": "",
+      "tasks": []
+    },
+    {
+      "id": "col_sg9ph8_moep64au",
+      "title": "Done",
+      "order": 2,
+      "boardId": "",
+      "tasks": []
+    }
+  ]
+}

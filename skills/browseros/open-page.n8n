@@ -1,0 +1,132 @@
+{
+  "name": "BrowserOS Open Page",
+  "nodes": [
+    {
+      "parameters": {
+        "events": "worklfow_call",
+        "inputSource": "passthrough"
+      },
+      "id": "c1000000-0001-4000-8000-000000000001",
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        272,
+        304
+      ],
+      "issues": {}
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "// Extract parameters from the request body\nconst input = $input.first().json;\nconst body = input.body || input;\n\nconst url = body.url || 'about:blank';\nconst hidden = body.hidden ?? false;\nconst background = body.background ?? false;\n\nreturn [{\n  json: {\n    toolName: 'new_page',\n    toolArgs: { url, hidden, background },\n    server: {\n      command: 'npx',\n      args: ['mcp-remote', 'http://127.0.0.1:9001/mcp']\n    }\n  }\n}];",
+        "notice": ""
+      },
+      "id": "c1000000-0002-4000-8000-000000000002",
+      "name": "Build MCP Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "preBuiltAgentsCalloutHttpRequest": "",
+        "curlImport": "",
+        "method": "POST",
+        "url": "http://localhost:6277/execute-tool",
+        "authentication": "none",
+        "provideSslCertificates": false,
+        "sendQuery": false,
+        "sendHeaders": true,
+        "specifyHeaders": "keypair",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Origin",
+              "value": "http://localhost:6274"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "timeout": 30000
+        },
+        "infoMessage": ""
+      },
+      "id": "c1000000-0003-4000-8000-000000000003",
+      "name": "Execute MCP Tool",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        704,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "const result = $input.first().json;\nreturn [{ json: { success: true, tool: 'new_page', result } }];",
+        "notice": ""
+      },
+      "id": "c1000000-0004-4000-8000-000000000004",
+      "name": "Format Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        928,
+        304
+      ]
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Build MCP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build MCP Request": {
+      "main": [
+        [
+          {
+            "node": "Execute MCP Tool",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute MCP Tool": {
+      "main": [
+        [
+          {
+            "node": "Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  }
+}
