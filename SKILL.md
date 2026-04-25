@@ -233,7 +233,8 @@ skills/
 ### Rules
 
 - **One folder per site** — `skills/<site-name>/`
-- **Each workflow gets a companion `.md`** documenting: input fields, output shape, flow steps, gotchas, last verified date
+- **Each workflow gets a companion `.md`** documenting: input fields, output shape, gotchas, last verified date
+- **`.md` must reference the `.n8n` file and provide the exact command to run it** — do NOT put detailed flow steps or MCP tool names in the `.md`. Instead, point to the `.n8n` file and provide the CLI command (e.g. `npm exec n8n-atom-cli run skills/google-calendar/view-month.n8n`). Detailed steps in `.md` mislead agents into calling MCP directly instead of running the `.n8n` workflow.
 - **File names are the action only** — `search.n8n`, not `google-search.n8n`
 - **Core browser primitives** go in `skills/browseros/`
 - **Read the `.md` first** before running or editing the `.n8n`

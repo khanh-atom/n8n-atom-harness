@@ -10,11 +10,13 @@ _No input fields required._
 
 Page content as markdown listing all events for the current month.
 
-## Flow steps
+## Workflow
 
-1. **Open Calendar** — `new_page` → `https://calendar.google.com/calendar/r/month`
-2. **Wait for Load** — 3-second wait for calendar to render
-3. **Get Events** — `get_page_content` on the calendar page → returns markdown with all events
+See `view-month.n8n` for the workflow. Run it using:
+
+```bash
+npm exec n8n-atom-cli run skills/google-calendar/view-month.n8n
+```
 
 ## Gotchas
 

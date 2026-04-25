@@ -25,18 +25,13 @@ Opens `https://www.google.com/search?q=<query>` in a new tab and returns the res
 }
 ```
 
-## Flow
+## Workflow
 
-```
-Subflow Trigger → Parse Input → List Pages → Open Google Search → Extract Page ID → Get Results Content → Format Response
-```
+See `search.n8n` for the workflow. Run it using:
 
-1. **Parse Input** — extracts `query` / `keyword` / `q` from incoming data
-2. **List Pages** — lists open tabs (for context, not strictly required)
-3. **Open Google Search** — opens `google.com/search?q=<encoded query>` as a new page
-4. **Extract Page ID** — parses the page ID from the `new_page` MCP response
-5. **Get Results Content** — calls `get_page_content` on that page to get markdown
-6. **Format Response** — returns `{ success, query, searchUrl, content }`
+```bash
+npm exec n8n-atom-cli run skills/google/search.n8n --input '{"query": "your search term"}'
+```
 
 ## Notes
 
