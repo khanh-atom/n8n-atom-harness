@@ -1,0 +1,191 @@
+{
+  "name": "Google Calendar — View Specific Month",
+  "nodes": [
+    {
+      "parameters": {
+        "events": "worklfow_call",
+        "inputSource": "workflowInputs",
+        "workflowInputs": {}
+      },
+      "id": "trigger",
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        272,
+        304
+      ],
+      "issues": {
+        "parameters": {
+          "workflowInputs": [
+            "At least 1 field is required."
+          ]
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "let input = $input.first().json;\nif (input.chatInput && typeof input.chatInput === 'string') {\n  try { input = JSON.parse(input.chatInput); } catch(e) {}\n}\nconst year = input.year;\nconst month = input.month;\n\nif (!year || !month) {\n  return [{ json: { error: 'Missing required parameters: year and month' } }];\n}\n\nreturn [{ json: { year, month } }];",
+        "notice": ""
+      },
+      "id": "parse-input",
+      "name": "Parse Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "preBuiltAgentsCalloutHttpRequest": "",
+        "curlImport": "",
+        "method": "POST",
+        "url": "http://localhost:6277/execute-tool",
+        "authentication": "none",
+        "provideSslCertificates": false,
+        "sendQuery": false,
+        "sendHeaders": true,
+        "specifyHeaders": "keypair",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Origin",
+              "value": "http://localhost:6274"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ toolName: 'new_page', toolArgs: { url: 'https://calendar.google.com/calendar/r/month/' + $('Parse Input').first().json.year + '/' + $('Parse Input').first().json.month + '/1', background: false, hidden: false }, server: { command: 'npx', args: ['mcp-remote', 'http://127.0.0.1:9001/mcp'] } }) }}",
+        "options": {
+          "timeout": 30000
+        },
+        "infoMessage": ""
+      },
+      "name": "Open Calendar",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        704,
+        304
+      ],
+      "id": "open-calendar"
+    },
+    {
+      "parameters": {
+        "resume": "timeInterval",
+        "amount": 3,
+        "unit": "seconds"
+      },
+      "name": "Wait for Load",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        928,
+        304
+      ],
+      "id": "wait",
+      "webhookId": "3d1732d6-e3d5-442a-bc3a-ca62ec474fe5"
+    },
+    {
+      "parameters": {
+        "preBuiltAgentsCalloutHttpRequest": "",
+        "curlImport": "",
+        "method": "POST",
+        "url": "http://localhost:6277/execute-tool",
+        "authentication": "none",
+        "provideSslCertificates": false,
+        "sendQuery": false,
+        "sendHeaders": true,
+        "specifyHeaders": "keypair",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Origin",
+              "value": "http://localhost:6274"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ toolName: 'get_page_content', toolArgs: { page: $('Open Calendar').first().json.result.structuredContent.pageId }, server: { command: 'npx', args: ['mcp-remote', 'http://127.0.0.1:9001/mcp'] } }) }}",
+        "options": {
+          "timeout": 30000
+        },
+        "infoMessage": ""
+      },
+      "name": "Get Events",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1152,
+        304
+      ],
+      "id": "get-events"
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Parse Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Input": {
+      "main": [
+        [
+          {
+            "node": "Open Calendar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Open Calendar": {
+      "main": [
+        [
+          {
+            "node": "Wait for Load",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Load": {
+      "main": [
+        [
+          {
+            "node": "Get Events",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  }
+}
