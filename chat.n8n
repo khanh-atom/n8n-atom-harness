@@ -3,22 +3,6 @@
   "nodes": [
     {
       "parameters": {
-        "public": false,
-        "availableInChat": false,
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
-      "typeVersion": 1.4,
-      "position": [
-        -32,
-        32
-      ],
-      "id": "b4c00fb6-5bb8-4972-9ac1-113b268aafe2",
-      "name": "When chat message received",
-      "webhookId": "7e5750f5-c102-49a4-8ef7-d3151cdcf048"
-    },
-    {
-      "parameters": {
         "aiAgentStarterCallout": "",
         "promptType": "auto",
         "text": "={{ $json.chatInput }}",
@@ -43,7 +27,7 @@
         "notice": "",
         "model": "auto",
         "options": {
-          "workingDirectory": "={{ $json.__dirpath }}"
+          "workingDirectory": "={{ $workspace.__dirPath }}"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatCursorAgent",
@@ -58,39 +42,22 @@
     },
     {
       "parameters": {
-        "events": "worklfow_call",
-        "inputSource": "workflowInputs",
-        "workflowInputs": {}
+        "public": false,
+        "availableInChat": false,
+        "options": {}
       },
-      "type": "n8n-nodes-base.executeWorkflowTrigger",
-      "typeVersion": 1.1,
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
       "position": [
-        -32,
-        -128
+        -16,
+        -112
       ],
-      "id": "420ca0ba-2b2a-4562-9f79-b2cb7c9870d7",
-      "name": "When Executed by Another Workflow",
-      "issues": {
-        "parameters": {
-          "workflowInputs": [
-            "At least 1 field is required."
-          ]
-        }
-      }
+      "id": "5261323d-f224-47b3-8c33-707370bfc4eb",
+      "name": "When chat message received",
+      "webhookId": "bc744ff3-a517-43c5-8625-53786ad5f4ab"
     }
   ],
   "connections": {
-    "When chat message received": {
-      "main": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Cursor Agent CLI Chat Model": {
       "ai_languageModel": [
         [
@@ -102,7 +69,7 @@
         ]
       ]
     },
-    "When Executed by Another Workflow": {
+    "When chat message received": {
       "main": [
         [
           {
@@ -116,5 +83,6 @@
   },
   "settings": {
     "availableInMCP": false
-  }
+  },
+  "pinData": {}
 }
