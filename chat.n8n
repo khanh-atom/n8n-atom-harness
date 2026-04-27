@@ -9,35 +9,17 @@
         "hasOutputParser": false,
         "needsFallback": false,
         "options": {
-          "systemMessage": "You are a helpful assistant, alway follow SKILL.md per user request"
+          "systemMessage": "alway follow SKILL.md per user request"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        224,
-        -64
+        176,
+        -80
       ],
       "id": "45b61bbb-8d55-419d-8024-3288697d3847",
       "name": "AI Agent",
-      "issues": {}
-    },
-    {
-      "parameters": {
-        "notice": "",
-        "model": "auto",
-        "options": {
-          "workingDirectory": "={{ $workspace.__dirPath }}"
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatCursorAgent",
-      "typeVersion": 1,
-      "position": [
-        144,
-        144
-      ],
-      "id": "30943f1c-17b9-4e15-9054-4d69c3842545",
-      "name": "Cursor Agent CLI Chat Model",
       "issues": {}
     },
     {
@@ -49,32 +31,50 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.4,
       "position": [
-        -16,
+        -64,
         -112
       ],
       "id": "5261323d-f224-47b3-8c33-707370bfc4eb",
       "name": "When chat message received",
       "webhookId": "bc744ff3-a517-43c5-8625-53786ad5f4ab"
+    },
+    {
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenCodeCli",
+      "typeVersion": 1,
+      "position": [
+        48,
+        128
+      ],
+      "id": "1aa22cb3-5943-4c4a-a67f-3c69df2bef41",
+      "name": "OpenCode CLI Chat Model",
+      "disabled": false,
+      "parameters": {
+        "notice": "",
+        "model": "auto",
+        "options": {
+          "workingDirectory": "={{ $workspace.__dirPath }}"
+        }
+      }
     }
   ],
   "connections": {
-    "Cursor Agent CLI Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "When chat message received": {
       "main": [
         [
           {
             "node": "AI Agent",
             "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenCode CLI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
             "index": 0
           }
         ]
