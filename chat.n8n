@@ -79,7 +79,10 @@
         "updates": [
           "message"
         ],
-        "additionalFields": {}
+        "additionalFields": {
+          "userIds": "={{ $vars.TelegramId }}",
+          "sendTyping": true
+        }
       },
       "type": "n8n-nodes-base.telegramPollingTrigger",
       "typeVersion": 1,
@@ -100,7 +103,9 @@
       "parameters": {
         "chatId": "={{ $('Telegram Polling Trigger').item.json.message.chat.id }}",
         "text": "={{ $json.output }}",
-        "additionalFields": {}
+        "additionalFields": {
+          "appendAttribution": false
+        }
       },
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
