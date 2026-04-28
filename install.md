@@ -32,7 +32,7 @@ If this returns a result, the setup is working.
 ## Run a skill workflow
 
 ```bash
-npm exec n8n-atom-cli run skills/browseros-open-page.n8n
+npm exec n8n-atom-cli run skills/browseros/open-page.n8n
 ```
 
 ## Endpoints

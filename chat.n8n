@@ -3,11 +3,6 @@
   "nodes": [
     {
       "parameters": {
-        "aiAgentStarterCallout": "",
-        "promptType": "auto",
-        "text": "={{ $json.chatInput }}",
-        "hasOutputParser": false,
-        "needsFallback": false,
         "options": {
           "systemMessage": "alway follow SKILL.md per user request"
         }
@@ -19,46 +14,124 @@
         -80
       ],
       "id": "45b61bbb-8d55-419d-8024-3288697d3847",
-      "name": "AI Agent",
-      "issues": {}
+      "name": "AI Agent"
     },
     {
       "parameters": {
-        "public": false,
-        "availableInChat": false,
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.4,
       "position": [
-        -64,
-        -112
+        -96,
+        -16
       ],
       "id": "5261323d-f224-47b3-8c33-707370bfc4eb",
       "name": "When chat message received",
       "webhookId": "bc744ff3-a517-43c5-8625-53786ad5f4ab"
     },
     {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "chatInput-from-telegram",
+              "name": "chatInput",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            },
+            {
+              "id": "sessionId-from-telegram",
+              "name": "sessionId",
+              "value": "={{ 'telegram_' + $json.message.chat.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        -208
+      ],
+      "id": "b2e8d4f6-c1a3-4b5e-9d7f-2a4c6e8f0b2d",
+      "name": "Set chatInput from Telegram"
+    },
+    {
+      "parameters": {
+        "options": {
+          "workingDirectory": "={{ $workspace.__dirPath }}"
+        }
+      },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenCodeCli",
       "typeVersion": 1,
       "position": [
-        48,
-        128
+        128,
+        112
       ],
       "id": "1aa22cb3-5943-4c4a-a67f-3c69df2bef41",
-      "name": "OpenCode CLI Chat Model",
-      "disabled": false,
+      "name": "OpenCode CLI Chat Model"
+    },
+    {
       "parameters": {
-        "notice": "",
-        "model": "auto",
-        "options": {
-          "workingDirectory": "={{ $workspace.__dirPath }}"
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramPollingTrigger",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        -240
+      ],
+      "id": "45b1d067-8526-4b66-ac18-6e844bec8719",
+      "name": "Telegram Polling Trigger",
+      "credentials": {
+        "telegramApi": {
+          "id": "pp5mK0fF7BObC0vz",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Polling Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        496,
+        -80
+      ],
+      "id": "9d901639-653a-46da-b78f-6b2cb9d3ec58",
+      "name": "Telegram Send Message",
+      "webhookId": "2111e479-d350-47ca-ba44-08814d4aa0d4",
+      "credentials": {
+        "telegramApi": {
+          "id": "pp5mK0fF7BObC0vz",
+          "name": "Telegram account"
         }
       }
     }
   ],
   "connections": {
     "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set chatInput from Telegram": {
       "main": [
         [
           {
@@ -79,10 +152,63 @@
           }
         ]
       ]
+    },
+    "Telegram Polling Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set chatInput from Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Telegram Send Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
     "availableInMCP": false
   },
-  "pinData": {}
+  "pinData": {
+    "Telegram Polling Trigger": [
+      {
+        "json": {
+          "update_id": 18554248,
+          "message": {
+            "message_id": 9,
+            "from": {
+              "id": 1452220944,
+              "is_bot": false,
+              "first_name": "Khanh",
+              "last_name": "P",
+              "username": "khanhpham2411",
+              "language_code": "en"
+            },
+            "chat": {
+              "id": 1452220944,
+              "first_name": "Khanh",
+              "last_name": "P",
+              "username": "khanhpham2411",
+              "type": "private"
+            },
+            "date": 1777348424,
+            "text": "Check calendar this month"
+          }
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  }
 }
