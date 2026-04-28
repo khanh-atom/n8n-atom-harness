@@ -2,21 +2,25 @@
   "name": "Google Search",
   "nodes": [
     {
-      "parameters": {},
+      "parameters": {
+        "events": "worklfow_call",
+        "inputSource": "passthrough"
+      },
       "id": "c6000000-0001-4000-8000-000000000001",
       "name": "When Executed by Another Workflow",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        260,
-        300
+        272,
+        304
       ]
     },
     {
       "parameters": {
         "mode": "runOnceForAllItems",
         "language": "javaScript",
-        "jsCode": "// Extract the search query from the incoming data\nlet input = $input.first().json;\n// n8n-atom-cli wraps --input as chatInput string; unwrap if needed\nif (input.chatInput && typeof input.chatInput === 'string') {\n  try { input = JSON.parse(input.chatInput); } catch(e) {}\n}\nconst query = input.query || input.keyword || input.q;\n\nif (!query) {\n  return [{ json: { error: 'Missing required parameter: query (or keyword / q)' } }];\n}\n\nreturn [{ json: { query } }];"
+        "jsCode": "// Extract the search query from the incoming data\nlet input = $input.first().json;\n// n8n-atom-cli wraps --input as chatInput string; unwrap if needed\nif (input.chatInput && typeof input.chatInput === 'string') {\n  try { input = JSON.parse(input.chatInput); } catch(e) {}\n}\nconst query = input.query || input.keyword || input.q;\n\nif (!query) {\n  return [{ json: { error: 'Missing required parameter: query (or keyword / q)' } }];\n}\n\nreturn [{ json: { query } }];",
+        "notice": ""
       },
       "id": "c6000000-0002-4000-8000-000000000002",
       "name": "Parse Input",
@@ -24,14 +28,20 @@
       "typeVersion": 2,
       "position": [
         480,
-        300
+        304
       ]
     },
     {
       "parameters": {
+        "preBuiltAgentsCalloutHttpRequest": "",
+        "curlImport": "",
         "method": "POST",
         "url": "http://localhost:6277/execute-tool",
+        "authentication": "none",
+        "provideSslCertificates": false,
+        "sendQuery": false,
         "sendHeaders": true,
+        "specifyHeaders": "keypair",
         "headerParameters": {
           "parameters": [
             {
@@ -45,26 +55,34 @@
           ]
         },
         "sendBody": true,
+        "contentType": "json",
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({ toolName: 'list_pages', toolArgs: {}, server: { command: 'npx', args: ['mcp-remote', 'http://127.0.0.1:9001/mcp'] } }) }}",
         "options": {
           "timeout": 15000
-        }
+        },
+        "infoMessage": ""
       },
       "id": "c6000000-0003-4000-8000-000000000003",
       "name": "List Pages",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        700,
-        300
+        704,
+        304
       ]
     },
     {
       "parameters": {
+        "preBuiltAgentsCalloutHttpRequest": "",
+        "curlImport": "",
         "method": "POST",
         "url": "http://localhost:6277/execute-tool",
+        "authentication": "none",
+        "provideSslCertificates": false,
+        "sendQuery": false,
         "sendHeaders": true,
+        "specifyHeaders": "keypair",
         "headerParameters": {
           "parameters": [
             {
@@ -78,41 +96,45 @@
           ]
         },
         "sendBody": true,
+        "contentType": "json",
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({ toolName: 'new_page', toolArgs: { url: 'https://www.google.com/search?q=' + encodeURIComponent($('Parse Input').first().json.query), hidden: false, background: false }, server: { command: 'npx', args: ['mcp-remote', 'http://127.0.0.1:9001/mcp'] } }) }}",
         "options": {
           "timeout": 30000
-        }
+        },
+        "infoMessage": ""
       },
       "id": "c6000000-0004-4000-8000-000000000004",
       "name": "Open Google Search",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        920,
-        300
+        928,
+        304
       ]
     },
     {
       "parameters": {
         "mode": "runOnceForAllItems",
         "language": "javaScript",
-        "jsCode": "// Extract the page ID from the new_page result\nconst result = $input.first().json;\n// MCP response: result.structuredContent.pageId (primary), or parse from text\nlet pageId = result?.result?.structuredContent?.pageId\n  ?? result?.structuredContent?.pageId\n  ?? result?.pageId\n  ?? result?.id;\n\n// Fallback: parse from text like 'Page ID: 15'\nif (!pageId && pageId !== 0) {\n  const textArr = result?.result?.content ?? result?.content ?? [];\n  for (const c of textArr) {\n    const m = String(c?.text ?? '').match(/Page ID:\\s*(\\d+)/i);\n    if (m) { pageId = parseInt(m[1], 10); break; }\n  }\n}\n\nif (!pageId && pageId !== 0) {\n  return [{ json: { pageId: 1, note: 'Could not parse pageId from new_page response; defaulting to 1' } }];\n}\n\nreturn [{ json: { pageId } }];"
+        "jsCode": "// Extract the page ID from the new_page result\nconst result = $input.first().json;\n// MCP response: result.structuredContent.pageId (primary), or parse from text\nlet pageId = result?.result?.structuredContent?.pageId\n  ?? result?.structuredContent?.pageId\n  ?? result?.pageId\n  ?? result?.id;\n\n// Fallback: parse from text like 'Page ID: 15'\nif (!pageId && pageId !== 0) {\n  const textArr = result?.result?.content ?? result?.content ?? [];\n  for (const c of textArr) {\n    const m = String(c?.text ?? '').match(/Page ID:\\s*(\\d+)/i);\n    if (m) { pageId = parseInt(m[1], 10); break; }\n  }\n}\n\nif (!pageId && pageId !== 0) {\n  return [{ json: { pageId: 1, note: 'Could not parse pageId from new_page response; defaulting to 1' } }];\n}\n\nreturn [{ json: { pageId } }];",
+        "notice": ""
       },
       "id": "c6000000-0005-4000-8000-000000000005",
       "name": "Extract Page ID",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1140,
-        300
+        1152,
+        304
       ]
     },
     {
       "parameters": {
         "mode": "runOnceForAllItems",
         "language": "javaScript",
-        "jsCode": "// Wait 2 seconds for Google's JS to fully render before extracting content\nawait new Promise(resolve => setTimeout(resolve, 2000));\nreturn $input.all();"
+        "jsCode": "// Wait 2 seconds for Google's JS to fully render before extracting content\nawait new Promise(resolve => setTimeout(resolve, 2000));\nreturn $input.all();",
+        "notice": ""
       },
       "id": "c6000000-0008-4000-8000-000000000008",
       "name": "Wait for Page Render",
@@ -120,14 +142,20 @@
       "typeVersion": 2,
       "position": [
         1360,
-        300
+        304
       ]
     },
     {
       "parameters": {
+        "preBuiltAgentsCalloutHttpRequest": "",
+        "curlImport": "",
         "method": "POST",
         "url": "http://localhost:6277/execute-tool",
+        "authentication": "none",
+        "provideSslCertificates": false,
+        "sendQuery": false,
         "sendHeaders": true,
+        "specifyHeaders": "keypair",
         "headerParameters": {
           "parameters": [
             {
@@ -141,34 +169,37 @@
           ]
         },
         "sendBody": true,
+        "contentType": "json",
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({ toolName: 'get_page_content', toolArgs: { page: $json.pageId }, server: { command: 'npx', args: ['mcp-remote', 'http://127.0.0.1:9001/mcp'] } }) }}",
         "options": {
           "timeout": 30000
-        }
+        },
+        "infoMessage": ""
       },
       "id": "c6000000-0006-4000-8000-000000000006",
       "name": "Get Results Content",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1580,
-        300
+        1584,
+        304
       ]
     },
     {
       "parameters": {
         "mode": "runOnceForAllItems",
         "language": "javaScript",
-        "jsCode": "const raw = $input.first().json;\nconst query = $('Parse Input').first().json.query;\n\n// MCP HTTP response is wrapped: { success, result: { content: [{type, text}], structuredContent } }\n// Extract the text content — try nested result.content first, then top-level fallbacks\nconst content =\n  raw?.result?.structuredContent?.content ||\n  raw?.result?.content?.[0]?.text ||\n  raw?.structuredContent?.content ||\n  raw?.content?.[0]?.text ||\n  raw?.text ||\n  JSON.stringify(raw);\n\nreturn [{\n  json: {\n    success: true,\n    query,\n    searchUrl: 'https://www.google.com/search?q=' + encodeURIComponent(query),\n    content\n  }\n}];"
+        "jsCode": "const raw = $input.first().json;\nconst query = $('Parse Input').first().json.query;\n\n// MCP HTTP response is wrapped: { success, result: { content: [{type, text}], structuredContent } }\n// Extract the text content — try nested result.content first, then top-level fallbacks\nconst content =\n  raw?.result?.structuredContent?.content ||\n  raw?.result?.content?.[0]?.text ||\n  raw?.structuredContent?.content ||\n  raw?.content?.[0]?.text ||\n  raw?.text ||\n  JSON.stringify(raw);\n\nreturn [{\n  json: {\n    success: true,\n    query,\n    searchUrl: 'https://www.google.com/search?q=' + encodeURIComponent(query),\n    content\n  }\n}];",
+        "notice": ""
       },
       "id": "c6000000-0007-4000-8000-000000000007",
       "name": "Format Response",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1800,
-        300
+        1808,
+        304
       ]
     }
   ],
@@ -254,14 +285,5 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "pinData": {
-    "When Executed by Another Workflow": [
-      {
-        "json": {},
-        "pairedItem": {
-          "item": 0
-        }
-      }
-    ]
-  }
+  "pinData": {}
 }
