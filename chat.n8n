@@ -4,7 +4,7 @@
     {
       "parameters": {
         "options": {
-          "systemMessage": "alway follow SKILL.md per user request"
+          "systemMessage": "- alway follow SKILL.md per user request\n- response should be under 300 words"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
