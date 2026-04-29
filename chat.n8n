@@ -205,37 +205,5 @@
   },
   "settings": {
     "availableInMCP": false
-  },
-  "pinData": {
-    "Telegram Polling Trigger": [
-      {
-        "json": {
-          "update_id": 18554248,
-          "message": {
-            "message_id": 9,
-            "from": {
-              "id": 1452220944,
-              "is_bot": false,
-              "first_name": "Khanh",
-              "last_name": "P",
-              "username": "khanhpham2411",
-              "language_code": "en"
-            },
-            "chat": {
-              "id": 1452220944,
-              "first_name": "Khanh",
-              "last_name": "P",
-              "username": "khanhpham2411",
-              "type": "private"
-            },
-            "date": 1777348424,
-            "text": "Check calendar this month"
-          }
-        },
-        "pairedItem": {
-          "item": 0
-        }
-      }
-    ]
   }
 }
