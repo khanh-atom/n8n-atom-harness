@@ -1,0 +1,14 @@
+{
+  "id": "n8n-harness",
+  "activation": {
+    "onStartup": false
+  },
+  "name": "n8n Harness",
+  "description": "BrowserOS MCP automation workflows for n8n-atom-cli, exposed as an OpenClaw skill plugin.",
+  "skills": ["./"],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
+}

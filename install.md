@@ -6,6 +6,25 @@
 2. **n8n-atom-cli** installed and available on `$PATH`
 3. **npx** available (comes with Node.js)
 
+## Install as an OpenClaw plugin
+
+From this repository root:
+
+```bash
+openclaw plugins install -l .
+openclaw plugins inspect n8n-harness
+```
+
+The linked install keeps OpenClaw pointed at this checkout through `plugins.load.paths`, so edits to the workflow files and `SKILL.md` are picked up after restarting the OpenClaw gateway/session.
+
+If you copy the repo into a workspace extension directory instead:
+
+```bash
+mkdir -p .openclaw/extensions
+cp -R /path/to/n8n-atom-harness .openclaw/extensions/n8n-harness
+openclaw plugins enable n8n-harness
+```
+
 ## Verify BrowserOS MCP is running
 
 ```bash

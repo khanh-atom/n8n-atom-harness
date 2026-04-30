@@ -4,6 +4,27 @@ Browser automation via **BrowserOS MCP** and **n8n workflow files**.
 
 No Python, no CDP daemon, no framework — just `.n8n` workflow files that make HTTP requests to BrowserOS MCP.
 
+## OpenClaw plugin
+
+This repository is also an OpenClaw skill plugin:
+
+- `openclaw.plugin.json` declares the `n8n-harness` plugin.
+- `index.ts` is the OpenClaw runtime entry. It is intentionally a no-op because the plugin ships skills, not runtime tools.
+- `SKILL.md` is exposed to OpenClaw via the manifest `skills: ["./"]`.
+
+For local development, link this repo into OpenClaw:
+
+```bash
+openclaw plugins install -l .
+openclaw plugins inspect n8n-harness
+```
+
+If this repo is placed under a workspace `.openclaw/extensions/` directory instead, enable it explicitly:
+
+```bash
+openclaw plugins enable n8n-harness
+```
+
 ## Architecture
 
 ```

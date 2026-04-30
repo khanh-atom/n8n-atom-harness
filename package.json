@@ -1,0 +1,16 @@
+{
+  "name": "openclaw-n8n-harness-plugin",
+  "version": "0.1.0",
+  "private": true,
+  "description": "OpenClaw skill plugin for BrowserOS MCP automation through n8n workflows.",
+  "type": "module",
+  "openclaw": {
+    "extensions": ["./index.ts"],
+    "compat": {
+      "pluginApi": ">=2026.4.25"
+    },
+    "build": {
+      "openclawVersion": "2026.4.27"
+    }
+  }
+}
