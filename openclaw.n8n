@@ -3,8 +3,6 @@
   "nodes": [
     {
       "parameters": {
-        "public": false,
-        "availableInChat": false,
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
@@ -19,13 +17,8 @@
     },
     {
       "parameters": {
-        "openClawNotice": "",
         "message": "={{ $json.chatInput }}",
-        "selectorType": "agent",
-        "agentId": "main",
         "thinking": "off",
-        "local": false,
-        "deliver": false,
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.openClawAgent",
@@ -38,17 +31,12 @@
       "name": "OpenClaw AI Agent"
     },
     {
-      "parameters": {
-        "telegramNotice": "",
-        "accountId": "",
-        "dmPolicy": "pairing",
-        "groupPolicy": "allowlist"
-      },
+      "parameters": {},
       "type": "@n8n/n8n-nodes-langchain.openClawTelegramChannel",
       "typeVersion": 1,
       "position": [
-        64,
-        -176
+        0,
+        -192
       ],
       "id": "aef2c363-27b8-4f64-8b7e-dfca94794995",
       "name": "n8n atom bot",
@@ -61,15 +49,14 @@
     },
     {
       "parameters": {
-        "notice": "",
         "model": "auto",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.lmChat9Router",
       "typeVersion": 1,
       "position": [
-        320,
-        -192
+        192,
+        -160
       ],
       "id": "0995c785-790e-4001-90cc-f3ddc9f99cda",
       "name": "9Router Chat Model",
@@ -79,6 +66,17 @@
           "name": "9Router account"
         }
       }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.openClawPlugin",
+      "typeVersion": 1,
+      "position": [
+        384,
+        -192
+      ],
+      "id": "2b133e2a-4e8a-4ce4-b329-77fc75c9daa2",
+      "name": "OpenClaw Plugin"
     }
   ],
   "connections": {
@@ -110,6 +108,17 @@
           {
             "node": "OpenClaw AI Agent",
             "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenClaw Plugin": {
+      "ai_tool": [
+        [
+          {
+            "node": "OpenClaw AI Agent",
+            "type": "ai_tool",
             "index": 0
           }
         ]
