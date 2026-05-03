@@ -36,7 +36,7 @@ mcp_browseros_new_page(url="https://www.google.com/search?q=hello+world")
 Agent creates .n8n file → npm exec n8n-atom-cli runs it → HTTP POST to BrowserOS MCP → browser action
 ```
 
-Every browser action is an HTTP POST to the BrowserOS MCP execute-tool endpoint:
+Every browser action is an HTTP POST to the BrowserOS MCP execute-tool endpoint (only use this in n8n workflow, do not use this directly)
 
 ```
 POST http://localhost:6277/execute-tool
