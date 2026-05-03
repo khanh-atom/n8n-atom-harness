@@ -1,11 +1,11 @@
 {
-  "name": "openclaw-n8n-harness-plugin",
+  "name": "@khanh-atom/n8n-harness",
   "version": "0.1.0",
-  "private": true,
   "description": "OpenClaw skill plugin for BrowserOS MCP automation through n8n workflows.",
   "type": "module",
   "openclaw": {
     "extensions": ["./index.ts"],
+    "hostTargets": ["darwin-arm64", "darwin-x64", "linux-x64", "win32-x64"],
     "compat": {
       "pluginApi": ">=2026.4.25"
     },

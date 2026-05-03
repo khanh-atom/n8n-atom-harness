@@ -83,7 +83,10 @@
       "name": "BrowserOS MCP Server"
     },
     {
-      "parameters": {},
+      "parameters": {
+        "pluginSource": "cloud",
+        "pluginId": "@khanh-atom/n8n-harness"
+      },
       "type": "@n8n/n8n-nodes-langchain.openClawPlugin",
       "typeVersion": 1,
       "position": [

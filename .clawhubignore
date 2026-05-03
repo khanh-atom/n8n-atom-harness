@@ -1,0 +1,17 @@
+# OS artifacts
+.DS_Store
+
+# Editor / IDE
+.vscode/
+
+# Kanban / local state boards
+.atom8n/
+
+# Raw workflow execution data (not needed by consumers)
+*.data
+
+# Scratch / local-only workflows
+openclaw.n8n
+opencode.n8n
+openclaw.data
+chat.data
