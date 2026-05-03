@@ -8,8 +8,8 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.4,
       "position": [
-        -192,
-        -320
+        -144,
+        -368
       ],
       "id": "7bbdf5dd-3724-4c9a-8805-a2bb9f808ece",
       "name": "Chat Trigger",
@@ -35,7 +35,7 @@
       "type": "@n8n/n8n-nodes-langchain.openClawTelegramChannel",
       "typeVersion": 1,
       "position": [
-        0,
+        -64,
         -192
       ],
       "id": "aef2c363-27b8-4f64-8b7e-dfca94794995",
@@ -55,8 +55,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChat9Router",
       "typeVersion": 1,
       "position": [
-        192,
-        -160
+        80,
+        -144
       ],
       "id": "0995c785-790e-4001-90cc-f3ddc9f99cda",
       "name": "9Router Chat Model",
@@ -72,11 +72,24 @@
       "type": "@n8n/n8n-nodes-langchain.openClawPlugin",
       "typeVersion": 1,
       "position": [
-        384,
-        -192
+        240,
+        -144
       ],
       "id": "2b133e2a-4e8a-4ce4-b329-77fc75c9daa2",
       "name": "OpenClaw Plugin"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openClawMcpServer",
+      "typeVersion": 1,
+      "position": [
+        448,
+        -192
+      ],
+      "id": "5951d2bb-a23e-4c98-acd5-bc0760daf22c",
+      "name": "OpenClaw MCP Server"
     }
   ],
   "connections": {
@@ -120,6 +133,17 @@
             "node": "OpenClaw AI Agent",
             "type": "ai_tool",
             "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenClaw MCP Server": {
+      "ai_tool": [
+        [
+          {
+            "node": "OpenClaw AI Agent",
+            "type": "ai_tool",
+            "index": 1
           }
         ]
       ]
