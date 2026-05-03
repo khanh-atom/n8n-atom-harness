@@ -31,11 +31,13 @@
       "name": "OpenClaw AI Agent"
     },
     {
-      "parameters": {},
+      "parameters": {
+        "allowFrom": "={{ $vars.TelegramId }}"
+      },
       "type": "@n8n/n8n-nodes-langchain.openClawTelegramChannel",
       "typeVersion": 1,
       "position": [
-        -64,
+        -48,
         -192
       ],
       "id": "aef2c363-27b8-4f64-8b7e-dfca94794995",
@@ -55,8 +57,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChat9Router",
       "typeVersion": 1,
       "position": [
-        80,
-        -144
+        96,
+        -176
       ],
       "id": "0995c785-790e-4001-90cc-f3ddc9f99cda",
       "name": "9Router Chat Model",
@@ -68,17 +70,6 @@
       }
     },
     {
-      "parameters": {},
-      "type": "@n8n/n8n-nodes-langchain.openClawPlugin",
-      "typeVersion": 1,
-      "position": [
-        240,
-        -144
-      ],
-      "id": "2b133e2a-4e8a-4ce4-b329-77fc75c9daa2",
-      "name": "OpenClaw Plugin"
-    },
-    {
       "parameters": {
         "options": {}
       },
@@ -86,10 +77,21 @@
       "typeVersion": 1,
       "position": [
         448,
-        -192
+        -176
       ],
       "id": "5951d2bb-a23e-4c98-acd5-bc0760daf22c",
-      "name": "OpenClaw MCP Server"
+      "name": "BrowserOS MCP Server"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.openClawPlugin",
+      "typeVersion": 1,
+      "position": [
+        256,
+        -144
+      ],
+      "id": "2b133e2a-4e8a-4ce4-b329-77fc75c9daa2",
+      "name": "n8n Harness Plugin"
     }
   ],
   "connections": {
@@ -126,24 +128,24 @@
         ]
       ]
     },
-    "OpenClaw Plugin": {
-      "ai_tool": [
-        [
-          {
-            "node": "OpenClaw AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "OpenClaw MCP Server": {
+    "BrowserOS MCP Server": {
       "ai_tool": [
         [
           {
             "node": "OpenClaw AI Agent",
             "type": "ai_tool",
             "index": 1
+          }
+        ]
+      ]
+    },
+    "n8n Harness Plugin": {
+      "ai_tool": [
+        [
+          {
+            "node": "OpenClaw AI Agent",
+            "type": "ai_tool",
+            "index": 0
           }
         ]
       ]
