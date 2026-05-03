@@ -13,7 +13,7 @@ Browser automation through **BrowserOS MCP** and **n8n workflows**. No Python, n
 > - **YES →** Run it with `n8n-atom-cli`. Do NOT call `mcp_browseros_*` tools directly.
 > - **NO →** Call BrowserOS MCP directly (`mcp_browseros_*`), then write a new `.n8n` skill file.
 
-Direct MCP calls (`mcp_browseros_*` tools) are a **fallback / authoring tool**, not the default. Using them when a skill already exists bypasses reusable, version-controlled workflows and defeats the purpose of this harness.
+Direct MCP calls (`mcp_browseros_*` tools, do not use curl) are a **fallback / authoring tool**, not the default. Using them when a skill already exists bypasses reusable, version-controlled workflows and defeats the purpose of this harness.
 
 ### Example — Google search
 
